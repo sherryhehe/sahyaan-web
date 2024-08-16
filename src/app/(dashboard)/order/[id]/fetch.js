@@ -1,5 +1,6 @@
-import { db } from "@/firebase/firebase";
+import { db, storage } from "@/firebase/firebase";
 import { getDoc, doc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 
 export default async function getOrderDetails(id) {
   try {
@@ -16,8 +17,7 @@ export default async function getOrderDetails(id) {
       const fullProductData = await getProductData(prod.id);
       return {
         ...fullProductData,
-        amount: prod.amount,
-        price: prod.price,
+        ...prod,
       };
     });
 
@@ -34,6 +34,17 @@ export default async function getOrderDetails(id) {
   }
 }
 
+export const getFileUrl = async (path) => {
+  try {
+    const fileRef = ref(storage, path);
+    const url = await getDownloadURL(fileRef);
+    console.log("File URL: ", url);
+    return url;
+  } catch (error) {
+    console.error("Error getting file URL: ", error);
+  }
+};
+
 async function getProductData(prodId) {
   try {
     const prodSnap = await getDoc(doc(db, "products", prodId));
@@ -42,8 +53,12 @@ async function getProductData(prodId) {
       console.error("Product does not exist");
       return null;
     }
+    const prodData = prodSnap.data();
+    prodData.thumbnail = await getDownloadURL(ref(storage, prodData.images[0]));
+    // prodData.thumbnail = prodImage;
+    console.log("Product: ", prodData);
 
-    return { id: prodSnap.id, ...prodSnap.data() };
+    return { id: prodSnap.id, ...prodData };
   } catch (error) {
     console.error("Error getting product data:", error);
     return null;

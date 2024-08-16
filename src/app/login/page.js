@@ -25,6 +25,7 @@ function page() {
     } catch (err) {
       console.log(err);
       setError(err.message);
+    
     }
     setLoading(false);
   };
