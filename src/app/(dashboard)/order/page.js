@@ -5,14 +5,19 @@ import { auth } from "@/firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 function Page() {
   const [user] = useAuthState(auth);
   const [orderData, setOrders] = useState();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   async function init() {
-    const data = await fetchOrders(user.uid);
-    setOrders(data);
+    setLoading(true);
+    await fetchOrders(user.uid).then((data) => {
+      setOrders(data);
+      setLoading(false);
+    });
   }
   useEffect(() => {
     if (user) {
@@ -20,6 +25,15 @@ function Page() {
     }
   }, [user]);
 
+  if (loading) {
+    return (
+      <div className="flex w-screen h-screen bg-bg items-center justify-center">
+        <div className="w-40 h-40">
+          <Loading className="text-text w-32" />
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="bg-bg min-h-screen w-full  py-6 sm:px-6 lg:px-10">
@@ -50,7 +64,7 @@ function Page() {
                     <td className="p-2">
                       {new Timestamp(
                         order.orderDate.seconds,
-                        order.orderDate.nanoseconds
+                        order.orderDate.nanoseconds,
                       )
                         .toDate()
                         .toDateString()}

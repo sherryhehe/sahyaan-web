@@ -1,6 +1,6 @@
 import React from "react";
 
-function Loading(props) {
+function Loading({ className = "text-bg", ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ function Loading(props) {
       viewBox="0 0 100 100"
       {...props}
     >
-      <circle cx={6} cy={50} r={6} fill="#fff">
+      <circle cx={6} cy={50} r={6} className={className}>
         <animate
           attributeName="opacity"
           begin={0.1}
@@ -17,7 +17,7 @@ function Loading(props) {
           values="0;1;0"
         />
       </circle>
-      <circle cx={26} cy={50} r={6} fill="#fff">
+      <circle cx={26} cy={50} r={6} className={className}>
         <animate
           attributeName="opacity"
           begin={0.2}
@@ -26,7 +26,7 @@ function Loading(props) {
           values="0;1;0"
         />
       </circle>
-      <circle cx={46} cy={50} r={6} fill="#fff">
+      <circle cx={46} cy={50} r={6} className={className}>
         <animate
           attributeName="opacity"
           begin={0.3}

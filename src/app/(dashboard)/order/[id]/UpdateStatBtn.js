@@ -6,11 +6,11 @@ import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
 
 export default function UpdateStateBtn({ oid, init_val }) {
-  const [orderStatus, setStatus] = useState("confirmed");
+  const [orderStatus, setStatus] = useState(init_val);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex h-10 md:h-auto flex-row gap-4">
       <select
         value={orderStatus}
         onChange={(e) => {

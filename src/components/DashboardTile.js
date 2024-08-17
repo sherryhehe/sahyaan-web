@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-export default function DashboardTile({ item, isExpanded }) {
+export default function DashboardTile({ item, isExpanded, setIsExpanded }) {
   //let subMenuOpen = false;
   //console.log(subMenuOpen);
   const [submenuOpen, setSubmenuOpen] = useState(false);
@@ -22,6 +22,10 @@ export default function DashboardTile({ item, isExpanded }) {
             router.push(item.pathname);
           } else if (isExpanded) {
             setSubmenuOpen((prev) => !prev);
+          }
+          console.log(window.innerWidth);
+          if (window.innerWidth <= 768 && !item.submenu) {
+            setIsExpanded(false);
           }
         }}
         className={`flex items-center  py-2  cursor-pointer transition-all duration-300 flex-row ease-in-out rounded-lg ${
@@ -52,6 +56,10 @@ export default function DashboardTile({ item, isExpanded }) {
                 router.push(item.pathname);
               } else if (isExpanded) {
                 setSubmenuOpen((prev) => !prev);
+              }
+
+              if (window.innerWidth <= 768) {
+                setIsExpanded(false);
               }
             }}
             className={`flex items-center  py-2 pl-8  cursor-pointer transition-all duration-300 flex-row ease-in-out rounded-lg ${

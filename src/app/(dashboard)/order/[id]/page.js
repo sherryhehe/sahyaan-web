@@ -1,6 +1,5 @@
 import React from "react";
 import getOrderDetails from "./fetch";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { Timestamp } from "firebase/firestore";
@@ -9,11 +8,11 @@ import { Banknote, Package, PackageCheck, SquareX, Truck } from "lucide-react";
 async function page({ params }) {
   const { id } = params;
   const order = await getOrderDetails(id);
-  console.log(order);
+
   return (
     <div className="py-6 sm:px-6 lg:px-10 bg-bg w-full">
       <p className="font-black text-2xl">Order Overview</p>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-col md:flex-row justify-between">
         <p className="font-semiBold text-lg mt-4 ">{order.id}</p>
         <UpdateStateBtn init_val={order.status} oid={order.id} />
       </div>
@@ -25,7 +24,7 @@ async function page({ params }) {
       </p>
       <div className="flex flex-col-reverse md:flex-row  mt-4 gap-10 w-full">
         <div className="flex flex-col gap-4 w-full 2xl:w-4/5 lg:w-3/5">
-          <div className="flex flex-col border border-secondary/30 shadow-sm duration-300 hover:shadow-md rounded-md p-5">
+          <div className="flex overflow-scroll flex-col border border-secondary/30 shadow-sm duration-300 hover:shadow-md rounded-md p-5">
             <p className="font-bold text-md">Products</p>
             <table className="border-separate border-spacing-y-3">
               <thead className="divide-x-2 divide-secondary-800">
@@ -46,7 +45,7 @@ async function page({ params }) {
                     <td className="py-2 px-2 group-hover:bg-bg-100 w-min group-hover:cursor-pointer duration-150 rounded-l-md bg-bg text-center">
                       <Link
                         href={`/product/${item.id}`}
-                        className=" flex flex-row items-center gap-4"
+                        className=" flex flex-col md:flex-row items-center gap-4"
                       >
                         <img
                           src={item.thumbnail}
@@ -54,7 +53,7 @@ async function page({ params }) {
                         />
                         <div className="flex flex-col gap-2 items-start justify-start">
                           <p className="font-semibold">{item.name}</p>
-                          <p className="font-thin text-sm text-nowrap text-ellipsis max-w-52 overflow-hidden">
+                          <p className="font-thin text-sm text-nowrap text-ellipsis md:max-w-52 overflow-hidden">
                             {item.shortDescription}
                           </p>
                         </div>
@@ -81,7 +80,7 @@ async function page({ params }) {
             </table>
           </div>
 
-          <div className="flex flex-col border border-secondary/30 shadow-sm duration-300 hover:shadow-md rounded-md p-5">
+          <div className="flex flex-col border border-secondary/30 overflow-scroll shadow-sm duration-300 hover:shadow-md rounded-md p-5">
             <p className="font-bold text-md">Timeline</p>
             <p className="font-thin">Track order logs</p>
             <table className="border-separate border-spacing-y-3">
@@ -135,7 +134,7 @@ async function page({ params }) {
             </table>
           </div>
         </div>
-        <div className="flex flex-col gap-4 w-full  2xl:w-1/5 lg:w-2/5 h-screen">
+        <div className="flex flex-col gap-4 w-full  2xl:w-1/5 lg:w-2/5 h-full">
           <div className="flex flex-col bg-bg  gap-3 border-secondary/30 border  rounded-md p-5 shadow-sm hover:shadow-md">
             <p>Payment</p>
             <div className="flex flex-col bg-bg-100 p-3 rounded-md">

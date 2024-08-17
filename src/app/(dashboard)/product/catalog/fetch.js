@@ -1,5 +1,6 @@
-import { db } from "@/firebase/firebase";
+import { db, storage } from "@/firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 
 export async function fetchCatelog(sid) {
   const sellerData = await getDoc(doc(db, "seller", sid)).then((snap) => {
@@ -12,12 +13,18 @@ export async function fetchCatelog(sid) {
   console.log(sellerData);
   const prods = await Promise.all(
     sellerData.products.map((id) =>
-      getDoc(doc(db, "products", id)).then((snap) => {
+      getDoc(doc(db, "products", id)).then(async (snap) => {
         if (!snap.exists) {
           console.log(`Product ${id} doesnot exists`);
           return;
         }
-        return { id: snap.id, ...snap.data() };
+
+        const prod = snap.data();
+        prod.images = await Promise.all(
+          prod.images.map((path) => getDownloadURL(ref(storage, path))),
+        );
+
+        return { id: snap.id, ...prod };
       }),
     ),
   );

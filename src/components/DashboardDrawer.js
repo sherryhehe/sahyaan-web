@@ -33,7 +33,7 @@ function DashboardDrawer() {
       icon: <Store />,
       label: "Products",
       submenu: [
-        { icon: <Boxes />, label: "Catelog", pathname: "/product/catelog" },
+        { icon: <Boxes />, label: "Catelog", pathname: "/product/catalog" },
         {
           icon: <PackagePlus />,
           label: "Add Product",
@@ -46,11 +46,13 @@ function DashboardDrawer() {
   return (
     <>
       <div
-        className={`relative h-full  ${isExpanded ? " lg:w-64" : " w-10 md:w-20"}`}
+        className={` md:h-full  ${isExpanded ? " lg:w-64" : "h-20 w-10 md:w-20"}`}
       ></div>
       <div
-        className={`fixed flex flex-row md:flex-col gap-4 items-center   py-4 px-4  left-0 top-0 md:h-full bg-primary text-white transition-all duration-200 ease-in-out shadow-2xl rounded-r-lg ${
-          isExpanded ? " w-full lg:w-64 h-screen " : "h-20 w-full md:w-20"
+        className={`fixed z-50 flex justify-between md:justify-start md:flex-col gap-4 items-center   py-4 px-4  left-0 top-0 md:h-full bg-primary text-white transition-all duration-200 ease-in-out shadow-2xl  md:rounded-r-lg ${
+          isExpanded
+            ? " flex-col w-full lg:w-64 h-full "
+            : " flex-row h-20 w-full md:w-20"
         }`}
       >
         <div
@@ -62,12 +64,17 @@ function DashboardDrawer() {
           <Menu className="w-8 h-8 " />
         </div>
         <nav
-          className="h-full w-full flex flex-col gap-1"
+          className={` lg:h-full ${isExpanded ? "visible" : "sm:hidden md:flex"} w-full  flex-col gap-1`}
           // onMouseEnter={() => setIsExpanded(true)}
           // onMouseLeave={() => setIsExpanded(false)}
         >
           {menuItems.map((item, index) => (
-            <DashboardTile item={item} key={index} isExpanded={isExpanded} />
+            <DashboardTile
+              item={item}
+              key={index}
+              isExpanded={isExpanded}
+              setIsExpanded={setIsExpanded}
+            />
           ))}
         </nav>
         <div className="flex w-full rounded-md  hover:bg-secondary-600 hover:cursor-pointer duration-300 p-2 flex-row items-center justify-start gap-3">
