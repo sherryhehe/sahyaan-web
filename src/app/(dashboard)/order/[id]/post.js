@@ -1,7 +1,13 @@
 import { db } from "@/firebase/firebase";
-import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  increment,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 
-export async function updateOrderStatus(oid, status) {
+export async function updateOrderStatus(oid, status, sid) {
   try {
     await updateDoc(doc(db, "orders", oid), {
       status: status,
@@ -19,9 +25,14 @@ export async function updateOrderStatus(oid, status) {
                   ? "The order has been delivered"
                   : status == "cancelled"
                     ? "The order has been cancled"
-                    : "",
+                    : status === "finished"
+                      ? "The order has been completed and closed"
+                      : "",
       }),
     });
+    if (status === "delivered") {
+      await updateDoc(doc(db, "seller", sid), { sale: increment(1) });
+    }
     console.log("done");
   } catch (e) {
     console.error(e);

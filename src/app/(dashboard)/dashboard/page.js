@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 function page() {
-  return <Dashboard/>;
+  return <Dashboard />;
 }
 
 export default page;

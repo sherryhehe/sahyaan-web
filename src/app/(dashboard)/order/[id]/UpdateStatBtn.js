@@ -4,8 +4,10 @@ import { updateOrderStatus } from "./post";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
+import { auth } from "@/firebase/firebase";
 
 export default function UpdateStateBtn({ oid, init_val }) {
+  const user = auth.currentUser;
   const [orderStatus, setStatus] = useState(init_val);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -20,13 +22,17 @@ export default function UpdateStateBtn({ oid, init_val }) {
           setStatus(updateVal);
           // });
         }}
-        className="px-4 border border-secondary rounded-md bg-bg"
+        className="px-4 border border-secondary rounded-md bg-bg  disabled:border-gray-500"
+        disabled={orderStatus === "delivered"}
       >
+        <option value="pending">Pending</option>
         <option value="confirmed">Confirmed</option>
         <option value="processing">Processing</option>
         <option value="shipped">Shipped</option>
         <option value="delivered">Delivered</option>
-        <option value="cancelled">Cancelled</option>
+        <option className="text-red-500 bg-red-400" value="cancelled">
+          Cancelled
+        </option>
       </select>
 
       {orderStatus != init_val && (
@@ -34,7 +40,7 @@ export default function UpdateStateBtn({ oid, init_val }) {
           className="px-4 py-2 rounded-md duration-300  min-w-32 hover:cursor-pointer bg-primary hover:bg-primary-400"
           onClick={() => {
             setLoading(true);
-            updateOrderStatus(oid, orderStatus).then(() => {
+            updateOrderStatus(oid, orderStatus, user.uid).then(() => {
               toast.success("Client will be soon notified!");
               router.refresh();
               setLoading(false);

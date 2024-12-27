@@ -1,15 +1,6 @@
 import { auth, db } from "@/firebase/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  getDoc,
-  doc,
-  setDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 export async function loginEmail(email, password) {
   return await signInWithEmailAndPassword(auth, email, password).then(
@@ -18,7 +9,7 @@ export async function loginEmail(email, password) {
       const user = userCredential.user;
       // ...
       return user;
-    }
+    },
   );
 }
 

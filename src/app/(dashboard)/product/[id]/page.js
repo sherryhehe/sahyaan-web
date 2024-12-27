@@ -14,6 +14,8 @@ import {
 import { updateImage, updateProduct } from "./post";
 import { useForm } from "@tanstack/react-form";
 import Loading from "@/components/Loading";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
 
 const defaultData = {
   categories: [
@@ -42,7 +44,7 @@ export default function page({ params }) {
   const { id } = params;
   const [product, setProduct] = useState();
   const router = useRouter();
-
+  const [user] = useAuthState(auth);
   const [newVariant, setNewVariant] = useState({ name: "", vals: "" });
   const [newSpec, setNewSpec] = useState({ name: "", value: "" });
   const [newKeywords, setNewKeywords] = useState();
@@ -122,7 +124,7 @@ export default function page({ params }) {
   }, [img_index, filesContent]);
 
   async function init() {
-    fetchProduct(id)
+    fetchProduct(id, user.uid)
       .then((data) => {
         setProduct(data);
       })
@@ -130,7 +132,8 @@ export default function page({ params }) {
         console.error(e);
 
         toast("Product doesnot exists!");
-        router.back();
+        // setTimeout(() => {}, 1000);
+        router.push("/product/catelog");
       });
   }
   useEffect(() => {
@@ -155,7 +158,11 @@ export default function page({ params }) {
       <div className="flex flex-col gap-4">
         <p className="font-bold text-2xl mt-14">Images*</p>
         <div className="grid grid-cols-2 md:grid-cols-10 gap-4 h-min">
-          {[...Array(product.images.length + 1)].map((_, index) => {
+          {[
+            ...Array(
+              product.images.length === 5 ? 5 : product.images.length + 1,
+            ),
+          ].map((_, index) => {
             return (
               <div
                 onClick={() => {
@@ -179,15 +186,37 @@ export default function page({ params }) {
             );
           })}
         </div>
-        <div className=" justify-end flex flex-row w-full">
+        <div className=" justify-end flex flex-row w-full gap-2">
           <button
-            className="bg-primary rounded-md px-4 py-1 text-bg"
+            disabled={product.sponsered && product.premium}
+            className="bg-bg border border-primary disabled:opacity-30 disabled:bg-bg disabled:text-primary hover:bg-primary hover:text-bg duration-150 transition-all rounded-md px-6 py-2 text-primary"
+            onClick={() => {
+              router.push(`/product/premium?pid=${product.id}`);
+            }}
+          >
+            Boost Product
+          </button>
+          <button
+            className="bg-primary  border border-primary hover:bg-bg hover:text-primary duration-150 transition-all rounded-md px-6 py-2 text-bg"
             onClick={() => {
               form.handleSubmit();
             }}
           >
             Update
           </button>
+        </div>
+
+        <div className=" justify-end flex flex-col w-full gap-1">
+          <p
+            className={`text-sm ${product.premium ? "text-green-300" : "text-gray-400"} text-end`}
+          >
+            Premium
+          </p>
+          <p
+            className={`text-sm ${product.sponsered ? "text-green-300" : "text-gray-400"} text-end`}
+          >
+            Sponsered
+          </p>
         </div>
 
         <form
@@ -235,6 +264,37 @@ export default function page({ params }) {
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                 </>
+              )}
+            />
+          </div>
+
+          <div>
+            <form.Field
+              validators={{
+                onChangeAsyncDebounceMs: 500,
+                onChangeAsync: ({ value }) =>
+                  !value
+                    ? "Shipping Cost is required"
+                    : value < 0 * cr
+                      ? `Minium shipping is ${0 * cr} ${sellerCurrency}`
+                      : undefined,
+              }}
+              name={"shipping_cost"}
+              children={(field) => (
+                <div className="flex flex-col w-min">
+                  <p className="font-bold text-2xl mb-2">Shipping Cost *</p>
+                  <input
+                    className="bg-bg border border-secondary/50 rounded-md px-2 py-1 min-w-full lg:min-w-96 outline-none"
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    type="number"
+                    onChange={(e) =>
+                      field.handleChange(parseFloat(e.target.value))
+                    }
+                  />
+                </div>
               )}
             />
           </div>

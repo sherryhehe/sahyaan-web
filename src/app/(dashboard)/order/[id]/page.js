@@ -60,16 +60,17 @@ async function page({ params }) {
                       </Link>
                     </td>
                     <td className="py-2 group-hover:bg-bg-100 group-hover:cursor-pointer border-l border-bg-200 duration-150 bg-bg text-center">
-                      {Object.entries(item.varaints).map(([key, value]) => {
-                        return (
-                          <p key={key}>
-                            &#8226; {key}: {value}
-                          </p>
-                        );
-                      })}
+                      {item.varaints &&
+                        Object.entries(item.varaints).map(([key, value]) => {
+                          return (
+                            <p key={key}>
+                              &#8226; {key}: {value}
+                            </p>
+                          );
+                        })}
                     </td>
                     <td className="py-2 group-hover:bg-bg-100 group-hover:cursor-pointer border-l border-r border-bg-200 duration-150 bg-bg text-center">
-                      {item.amount}
+                      {item.count}
                     </td>
                     <td className="py-2 group-hover:bg-bg-100 group-hover:cursor-pointer duration-150 rounded-r-md bg-bg text-center">
                       {item.price}
@@ -146,25 +147,32 @@ async function page({ params }) {
               <div className="flex flex-row justify-between items-center">
                 <p className="font-light text-sm">Transaction ID</p>{" "}
                 <p className="font-light text-sm">
-                  {order.payment.TransectionID}
+                  {order.payment.transactionId}
                 </p>
               </div>
 
               <div className="flex flex-row justify-between items-center">
-                <p className="font-light text-sm">Amount</p>{" "}
-                <p className="font-light text-sm">{order.payment.amount} PKR</p>
+                <p className="font-light text-sm">Cost</p>{" "}
+                <p className="font-light text-sm">{order.payment.amount}</p>
               </div>
 
               <div className="flex flex-row justify-between items-center">
                 <p className="font-light text-sm">Shipping Cost</p>{" "}
-                <p className="font-light text-sm">
-                  {order.payment.shipping} PKR
-                </p>
+                <p className="font-light text-sm">{order.payment.shipping}</p>
               </div>
+              <div className="flex flex-row justify-between items-center">
+                <p className="font-semibold text-sm">SubTotal</p>{" "}
+                <p className="font-semibold text-sm">{order.payment.total}</p>
+              </div>
+              <div className="flex flex-row justify-between items-center">
+                <p className="font-light text-sm">Cut</p>{" "}
+                <p className="font-light text-sm">-{order.payment.cut}</p>
+              </div>
+
               <div className="flex flex-row justify-between items-center">
                 <p className="font-semibold text-md">Total</p>{" "}
                 <p className="font-semibold text-md">
-                  {order.payment.shipping + order.payment.amount} PKR
+                  {order.payment.total - order.payment.cut} PKR
                 </p>
               </div>
             </div>

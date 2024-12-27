@@ -28,7 +28,7 @@ export default function DashboardTile({ item, isExpanded, setIsExpanded }) {
             setIsExpanded(false);
           }
         }}
-        className={`flex items-center  py-2  cursor-pointer transition-all duration-300 flex-row ease-in-out rounded-lg ${
+        className={`flex items-center  py-2  cursor-pointer transition-all duration-300 flex-row flex-shrink-0 ease-in-out rounded-lg ${
           isExpanded ? "w-full px-4 justify-start" : "w-12 h-12 justify-center"
         } ${
           item.pathname == pathname

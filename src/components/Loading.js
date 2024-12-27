@@ -1,12 +1,13 @@
 import React from "react";
 
-function Loading({ className = "text-bg", ...props }) {
+function Loading({ className = "fill-bg", ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlSpace="preserve"
       viewBox="0 0 100 100"
       {...props}
+      className={className}
     >
       <circle cx={6} cy={50} r={6} className={className}>
         <animate
