@@ -34,9 +34,10 @@ function page() {
     // const country = response.data.countryCode.toLowerCase();
 
     try {
-      const user = await googleSignin("");
-      console.log(user);
-      router.push("/");
+      await googleSignin("").then((user) => {
+        console.log(user);
+        router.push("/");
+      });
     } catch (err) {
       console.log(err);
       setError(err.message);
