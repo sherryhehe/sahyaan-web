@@ -6,7 +6,8 @@ import { loginSeller } from "./login";
 import Link from "next/link";
 import Loading from "@/components/Loading";
 import { googleSignin } from "../signup/signup";
-function page() {
+
+function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,31 +19,27 @@ function page() {
     setLoading(true);
     try {
       await loginSeller(email, password);
-      // Redirect to dashboard or home page after successful login
-
       router.push("/dashboard");
     } catch (err) {
       console.log(err);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const handleGoogleSignup = async () => {
-    // Implement Google signup logic here
-    // const response = await axios.get("http://ip-api.com/json/");
-    // const country = response.data.countryCode.toLowerCase();
-
+  const handleGoogleSignup = async (e) => {
+    e.preventDefault(); // Prevent any form submission
+    setLoading(true);
     try {
-      await googleSignin("").then((user) => {
-        console.log(user);
-        router.push("/");
-      });
+      const user = await googleSignin("");
+      console.log(user);
+      router.push("/");
     } catch (err) {
       console.log(err);
       setError(err.message);
-      // //  // console.log(err);
-      // ToastAndroid.show(err.message, ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,10 +54,10 @@ function page() {
       }}
       className="flex justify-end"
     >
-      <div className=" flex flex-col px-32 py-28 min-w-[45%] bg-bg rounded-tl-3xl items-center justify-center ">
-        <h1 className=" font-bold text-xl">Login</h1>
+      <div className="flex flex-col px-32 py-28 min-w-[45%] bg-bg rounded-tl-3xl items-center justify-center">
+        <h1 className="font-bold text-xl">Login</h1>
         <form className="flex flex-col gap-1 w-[50%]" onSubmit={handleSubmit}>
-          <p className=" text-sm font-light text-red-600">{error && error}</p>
+          <p className="text-sm font-light text-red-600">{error && error}</p>
           <div>
             <label
               htmlFor="email"
@@ -75,7 +72,7 @@ function page() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className=" font-thin text-base   mt-1 block p-1 w-full border border-gray-500 rounded-lg h-8 shadow-sm ring-0 focus:border-primary focus:ring-primary sm:text-sm"
+              className="font-thin text-base mt-1 block p-1 w-full border border-gray-500 rounded-lg h-8 shadow-sm ring-0 focus:border-primary focus:ring-primary sm:text-sm"
             />
           </div>
           <div>
@@ -92,7 +89,7 @@ function page() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className=" font-thin text-base   mt-1 block p-1 w-full border border-gray-500 rounded-lg h-8 shadow-sm ring-0 focus:border-primary focus:ring-primary sm:text-sm"
+              className="font-thin text-base mt-1 block p-1 w-full border border-gray-500 rounded-lg h-8 shadow-sm ring-0 focus:border-primary focus:ring-primary sm:text-sm"
             />
           </div>
           {!loading ? (
@@ -103,40 +100,41 @@ function page() {
               Sign In
             </button>
           ) : (
-            <div className="w-full mt-5 bg-primary text-bg flex flex-row items-center justify-center  px-4 rounded-md shadow-sm  ">
-              <Loading className={"w-10 fill-bg "} />
+            <div className="w-full mt-5 bg-primary text-bg flex flex-row items-center justify-center px-4 rounded-md shadow-sm">
+              <Loading className="w-10 fill-bg" />
             </div>
           )}
-
-          {!loading ? (
-            <button
-              onClick={() => {
-                handleGoogleSignup();
-              }}
-              className="w-full mt-5 bg-blue-500 text-bg py-2 px-4 rounded-md shadow-sm hover:bg-blue-400 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              Sign Up with Google
-            </button>
-          ) : (
-            <div className="w-full mt-5 bg-blue-500 text-bg py-2 px-4 rounded-md shadow-sm hover:bg-blue-400 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-              <Loading className={"w-10"} />
-            </div>
-          )}
-          <div className="text-center text-sm text-gray-600 mb-8">
-            <a
-              href="#"
-              className="font-medium text-primary hover:text-primary-dark"
-            >
-              Forgot your password?
-            </a>
-          </div>
-          <Link href={"/signup"} className="font-thin text-center text-sm">
-            New seller? Create a new
-          </Link>
         </form>
+
+        {/* Move Google sign-in button outside the form */}
+        {!loading ? (
+          <button
+            onClick={handleGoogleSignup}
+            type="button" // Explicitly set type to button
+            className="w-[50%] mt-5 bg-blue-500 text-bg py-2 px-4 rounded-md shadow-sm hover:bg-blue-400 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          >
+            Sign Up with Google
+          </button>
+        ) : (
+          <div className="w-[50%] mt-5 bg-blue-500 text-bg py-2 px-4 rounded-md shadow-sm hover:bg-blue-400 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            <Loading className="w-10" />
+          </div>
+        )}
+
+        <div className="text-center text-sm text-gray-600 mb-8">
+          <a
+            href="#"
+            className="font-medium text-primary hover:text-primary-dark"
+          >
+            Forgot your password?
+          </a>
+        </div>
+        <Link href="/signup" className="font-thin text-center text-sm">
+          New seller? Create a new
+        </Link>
       </div>
     </div>
   );
 }
 
-export default page;
+export default Page;
