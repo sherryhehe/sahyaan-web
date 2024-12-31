@@ -3,11 +3,12 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase/firebase";
 
 const LogoutPage = () => {
   const router = useRouter();
-  const auth = getAuth();
+  // const auth = getAuth();
 
   useEffect(() => {
     const handleLogout = async () => {

@@ -36,7 +36,7 @@ function page() {
     try {
       const user = await googleSignin("");
       console.log(user);
-      router.push("/onboarding");
+      router.push("/");
     } catch (err) {
       console.log(err);
       setError(err.message);

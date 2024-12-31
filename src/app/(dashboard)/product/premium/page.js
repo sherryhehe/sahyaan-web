@@ -119,7 +119,7 @@ export default function PromotePage() {
 
   useEffect(() => {
     const getProduct = async () => {
-      const data = await fetchProduct(searchParams.get("pid"));
+      const data = await fetchProduct(searchParams.get("pid"), user.uid);
       console.log(data);
       setProduct(data);
       setActiveType(!data.premium ? 0 : 1);

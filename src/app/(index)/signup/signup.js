@@ -1,6 +1,6 @@
 import { auth, db } from "@/firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
@@ -49,8 +49,13 @@ export const googleSignin = async (country) => {
 
     // Extract the user information
     const user = result.user;
-
-    createUserBasePlate(user.uid, user.displayName, country);
+    await getDoc(doc(db, "seller", user.uid)).then((snap) => {
+      if (!snap.exists()) {
+        createUserBasePlate(user.uid, user.displayName, country);
+      }
+      // const sData = snap.data()
+      // if sData.onboarding
+    });
     // //  // console.log("User UID:", user.uid);
 
     return user.uid;
