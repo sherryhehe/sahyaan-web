@@ -109,16 +109,19 @@ export default function page() {
         </form>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-4 grid-cols-3 2xl:grid-cols-6 my-6">
+      <div className="grid gap-3 lg:grid-cols-4 grid-cols-2 2xl:grid-cols-6 my-6">
         {catalog && catalog.length ? (
           catalog.map((item, index) => (
             <Link
               key={index}
               href={`/product/${item.id}`}
-              className=" shadow-sm hover:shadow-md duration-300 hover:cursor-pointer flex flex-col gap-2 w-full p-4 bg-bg border border-secondary/20 rounded-md"
+              className=" shadow-sm hover:shadow-md duration-300 hover:cursor-pointer overflow-hidden flex flex-col gap-2 w-fit h-fit p-2 md:p-4 bg-bg border border-secondary/20 rounded-sm md:rounded-md"
             >
-              <div className=" aspect-auto bg-bg-300 w-full">
-                <img src={item.images[0]} className="h-full aspect-auto" />
+              <div className="aspect-auto bg-bg-300 w-32 h-32 md:w-48 md:h-48 relative overflow-hidden">
+                <img
+                  src={item.images[0]}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="font-thin text-xs">{item.category[0]}</p>

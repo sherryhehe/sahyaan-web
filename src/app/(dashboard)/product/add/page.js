@@ -129,11 +129,27 @@ export default function AddProductPage() {
     multiple: true,
     validators: [
       new FileAmountLimitValidator({ max: 5 }),
-      new FileTypeValidator(["jpg", "png"]),
-      new FileSizeValidator({ maxFileSize: 2 * 1024 * 1024 }),
+      new FileTypeValidator([
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "tiff",
+        "webp",
+        "heic",
+        "svg",
+        "psd",
+        "raw",
+        "ico",
+        "eps",
+        "pdf",
+        "ai",
+        "avif",
+      ]),
+      new FileSizeValidator({ maxFileSize: 5 * 1024 * 1024 }),
       new ImageDimensionsValidator({
-        maxHeight: 900,
-        maxWidth: 1600,
+        maxHeight: 2000,
+        maxWidth: 2000,
       }),
     ],
   });
@@ -236,7 +252,7 @@ export default function AddProductPage() {
   return (
     <div className="bg-bg min-h-screen w-full py-6 sm:px-6 lg:px-10">
       <p className="font-black text-2xl">Add New Product</p>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 ">
         {errors.length > 0 && (
           <p className="text-red-500">Error: {errors[0].message}</p>
         )}
@@ -271,7 +287,7 @@ export default function AddProductPage() {
             }}
             children={(field) => {
               return (
-                <div className="flex flex-col col-span-2">
+                <div className="flex flex-col col-span-1 md:col-span-2">
                   <p className="font-bold text-2xl mt-14">Images*</p>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4 h-min">
                     {[
@@ -582,7 +598,7 @@ export default function AddProductPage() {
               children={(field) => (
                 <>
                   <p className="font-bold text-2xl mb-1">Variants</p>
-                  <div className="flex flex-row flex-wrap gap-2">
+                  <div className="flex flex-col md:flex-row flex-wrap gap-2 w-min">
                     <input
                       type="text"
                       placeholder="Variant Name"
@@ -604,7 +620,7 @@ export default function AddProductPage() {
                     <button
                       type="button"
                       onClick={() => handleAddVariant(field)}
-                      className="bg-primary text-white rounded-md px-3 py-1"
+                      className="bg-primary text-white rounded-md px-3 py-1 text-center flex items-center justify-center"
                     >
                       <Plus size={20} />
                     </button>
@@ -653,7 +669,7 @@ export default function AddProductPage() {
                 <div className="flex flex-col w-min">
                   <p className="font-bold text-2xl mb-1">Specification *</p>
                   <p className="font-thin text-sm">minimum 3</p>
-                  <div className="flex flex-row w-max flex-wrap gap-2">
+                  <div className="flex flex-col md:flex-row flex-wrap gap-2">
                     <input
                       type="text"
                       placeholder="Spec Name"
@@ -675,7 +691,7 @@ export default function AddProductPage() {
                     <button
                       type="button"
                       onClick={() => handleAddSpec(field)}
-                      className="bg-primary text-white rounded-md px-3 py-1"
+                      className="bg-primary text-white rounded-md px-3 py-1 text-center flex items-center justify-center"
                     >
                       <Plus size={20} />
                     </button>
